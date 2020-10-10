@@ -4,6 +4,8 @@ import typing as tp
 
 def is_prime(n: int) -> bool:
     # PUT YOUR CODE HERE
+    if n == 1:
+        return False;
     for i in range(2, n):
         if n % i == 0:
             return False
@@ -26,12 +28,14 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     23
     """
     # PUT YOUR CODE HERE
-    ceff = 1
-    s = e
-    while s % phi != 1:
-        ceff = ceff + 1
-        s = e * ceff
-    return ceff
+    if e and phi != 0:
+      e = e % phi;
+      for x in range(1, phi) :
+          if ((e * x) % phi == 1) :
+              return x
+      return 0
+    else:
+      return
     pass
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
@@ -60,7 +64,7 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
 
     # Return public and private keypair
     # Public key is (e, n) and private key is (d, n)
-    return ((e, n), (d, n))
+    return (e, n), (d, n)
 
 
 def encrypt(pk: tp.Tuple[int, int], plaintext: str) -> tp.List[int]:
