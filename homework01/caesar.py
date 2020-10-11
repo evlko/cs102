@@ -56,7 +56,3 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     best_shift = 0
     # PUT YOUR CODE HERE
     return best_shift
-
-
-print(encrypt_caesar("Python3.6"))
-print(decrypt_caesar("SBWKRQ"))
