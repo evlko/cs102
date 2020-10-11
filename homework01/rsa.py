@@ -3,22 +3,17 @@ import typing as tp
 
 
 def is_prime(n: int) -> bool:
-    # PUT YOUR CODE HERE
     if n == 1:
         return False;
     for i in range(2, n):
         if n % i == 0:
             return False
     return True
-    pass
 
 def gcd(a: int, b: int) -> int:
-    # PUT YOUR CODE HERE
     while b != 0:
         a, b = b, a % b
     return a
-    pass
-
 
 def multiplicative_inverse(e: int, phi: int) -> int:
     """
@@ -27,28 +22,22 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
-    if e and phi != 0:
-      e = e % phi;
-      for x in range(1, phi) :
-          if ((e * x) % phi == 1) :
-              return x
-      return 0
-    else:
-      return
-    pass
+    save = phi
+    x1, x2, y1, y2 = 1, 0, 0, 1
+    while phi:
+        q = e // phi
+        e, phi = phi, e % phi
+        x1, x2, y1, y2 = x2, x1 - x2*q, y2, y1 - y2*q
+    return x1 % save
+
+print(multiplicative_inverse(7, 40))
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
     if not (is_prime(p) and is_prime(q)):
         raise ValueError("Both numbers must be prime.")
     elif p == q:
         raise ValueError("p and q cannot be equal")
-
-    # n = pq
-    # PUT YOUR CODE HERE
     n = p * q
-    # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
     phi = (p-1)*(q-1)
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
