@@ -30,8 +30,6 @@ def multiplicative_inverse(e: int, phi: int) -> int:
         x1, x2, y1, y2 = x2, x1 - x2*q, y2, y1 - y2*q
     return x1 % save
 
-print(multiplicative_inverse(7, 40))
-
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
     if not (is_prime(p) and is_prime(q)):
         raise ValueError("Both numbers must be prime.")
