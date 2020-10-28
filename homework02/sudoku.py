@@ -155,18 +155,19 @@ def check_solution(solution: List[List[str]]) -> bool:
     >>> check_solution([['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '5', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']])
     False
     """
+    numbers = set(["1", "2", "3", "4", "5", "6", "7", "8", "9"])
     for i in range(9):
         numbers_in_row = get_row(solution, (i, 0))
-        if len(set(numbers_in_row)) != 9:
+        if set(numbers_in_row) != numbers:
             return False
     for i in range(9):
         numbers_in_col = get_col(solution, (0, i))
-        if len(set(numbers_in_col)) != 9:
+        if set(numbers_in_col) != numbers:
             return False
     for i in range(3):
         for j in range(3):
             numbers_in_block = get_block(solution, (i + 3 * i, j + 3 * j))
-            if len(set(numbers_in_block)) != 9:
+            if set(numbers_in_block) != numbers:
                 return False
     return True
 
