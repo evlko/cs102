@@ -1,4 +1,4 @@
-from typing import Tuple, List, Set, Optional
+from typing import Tuple, List, Set, Optional, cast
 import random
 
 
@@ -140,8 +140,9 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
         return None
     for value in possible_values:
         grid[empty_position[0]][empty_position[1]] = value
-        if solve(grid):
-            return solve(grid)
+        solution = solve(grid)
+        if solution:
+            return solution
         grid[empty_position[0]][empty_position[1]] = "."
     return None
 
@@ -195,9 +196,8 @@ def generate_sudoku(N: int) -> List[List[str]]:
     True
     """
     N = 81 if N > 81 else N
-    grid = [["." for i in range(9)] for j in range(9)]
+    grid = cast(List[List[str]], solve([["." for i in range(9)] for j in range(9)]))
     positions = [(i, j) for i in range(0, 9) for j in range(0, 9)]
-    solve(grid)
     for i in range(81 - N):
         cell = random.randint(0, len(positions) - 1)
         grid[positions[cell][0]][positions[cell][1]] = "."
