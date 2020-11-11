@@ -1,7 +1,7 @@
 import argparse
 
-import pygame  # type: ignore
-from pygame.locals import *  # type: ignore
+import pygame
+from pygame.locals import *  
 
 from life import GameOfLife
 from ui import UI

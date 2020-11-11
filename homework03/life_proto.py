@@ -1,8 +1,8 @@
 import random
 from typing import List, Tuple
 
-import pygame  # type: ignore
-from pygame.locals import *  # type: ignore
+import pygame  
+from pygame.locals import *
 
 Cell = Tuple[int, int]
 Cells = List[int]
