@@ -1,9 +1,8 @@
-import pygame
 import random
-
-from pygame.locals import *
 from typing import List, Tuple
 
+import pygame
+from pygame.locals import *
 
 Cell = Tuple[int, int]
 Cells = List[int]
@@ -53,7 +52,7 @@ class GameOfLife:
         running = True
         while running:
             for event in pygame.event.get():
-                if event.type == QUIT:
+                if event.type == QUIT:  # type: ignore
                     running = False
             # Отрисовка списка клеток
             self.draw_grid()
@@ -93,11 +92,9 @@ class GameOfLife:
         """
         for x in range(0, self.width, self.cell_size):
             for y in range(0, self.height, self.cell_size):
-                color = (
-                    (127, 242, 26)
-                    if self.grid[y // self.cell_size][x // self.cell_size] == 1
-                    else "white"
-                )
+                color = (255, 255, 255)  # white color
+                if self.grid[y // self.cell_size][x // self.cell_size] == 1:
+                    color = (127, 242, 26)  # green color
                 pygame.draw.rect(
                     self.screen,
                     pygame.Color(color),
