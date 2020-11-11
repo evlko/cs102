@@ -2,8 +2,8 @@ import pathlib
 import random
 import typing as tp
 
-import pygame
-from pygame.locals import *
+import pygame  # type: ignore
+from pygame.locals import *  # type: ignore
 
 Cell = tp.Tuple[int, int]
 Cells = tp.List[int]
