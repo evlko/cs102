@@ -75,11 +75,11 @@ def find_tree_files(tree_sha: str, gitdir: pathlib.Path) -> tp.List[tp.Tuple[str
 
 
 def commit_parse(raw: bytes, start: int = 0, dct=None):
-    data = {"message": []} #type: ignore
+    data = {"message": []}  # type: ignore
     for line in raw.decode().split("\n"):
         if line.startswith(("tree", "parent", "author", "committer")):
             name, value = line.split(" ", maxsplit=1)
-            data[name] = value
+            data[str(name)] = value  # type: ignore
         else:
             data["message"].append(line)
     return data
