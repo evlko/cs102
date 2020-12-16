@@ -67,8 +67,10 @@ def find_tree_files(tree_sha: str, gitdir: pathlib.Path) -> tp.List[tp.Tuple[str
     header, data = read_object(tree_sha, gitdir)
     for file in read_tree(data):
         if read_object(file[2], gitdir)[0] == "tree":
-            tree = find_tree_files(file[2], gitdir)
-            result = [(file[1] + "/" + blob[0], blob[1]) for blob in tree]
+            result = [
+                (file[1] + "/" + blob[0], blob[1])
+                for blob in find_tree_files(file[2], gitdir)
+            ]
         else:
             result.append((file[1], file[2]))
     return result
