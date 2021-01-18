@@ -94,9 +94,7 @@ def get_wall_execute(
     for i in progress(range(math.ceil(count / 2500))):
         result = result.append(
             json_normalize(
-                get_posts_2500(
-                    owner_id, domain, offset, count, max_count, filter, extended, fields
-                )
+                get_posts_2500(owner_id, domain, offset, count, max_count, filter, extended, fields)
             )
         )
         time.sleep(1)
