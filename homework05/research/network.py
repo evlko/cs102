@@ -20,7 +20,7 @@ def ego_network(
     results = []
     if friends is None:
         fields: tp.List[tp.Dict[str, tp.Any]] = get_friends(
-            user_id, fields=["nickname", "is_closed, deactivate"]
+            user_id, fields=["nickname", "is_closed, deactivate"] # type: ignore
         ).items  # type: ignore
         friends = [
             friend["id"]
