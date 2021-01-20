@@ -57,7 +57,7 @@ def get_posts_2500(
     }
     response = session.post("execute", data=data)
     doc = response.json()
-    if "error" in doc or not response.ok:
+    if "error" in doc or response.ok == False:
         raise APIError(doc["error"]["error_msg"])
     return doc["response"]["items"]
 
@@ -94,7 +94,9 @@ def get_wall_execute(
     for i in progress(range(math.ceil(count / 2500))):
         result = result.append(
             json_normalize(
-                get_posts_2500(owner_id, domain, offset, count, max_count, filter, extended, fields)
+                get_posts_2500(
+                    owner_id, domain, offset, count, max_count, filter, extended, fields
+                )
             )
         )
         time.sleep(1)

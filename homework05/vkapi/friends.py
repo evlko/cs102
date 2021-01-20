@@ -41,7 +41,7 @@ def get_friends(
         "offset": offset,
     }
     response = session.get("friends.get", params=params).json()
-    if "error" in response:
+    if "error" in response or response.ok == False:
         raise APIError(response["error"]["error_msg"])
     return FriendsResponse(**response["response"])
 
@@ -81,7 +81,7 @@ def get_mutual(
             "order": order,
         }
         response = session.get("friends.getMutual", params=params).json()
-        if "error" in response:
+        if "error" in response or response.ok == False:
             raise APIError(response["error"]["error_msg"])
         return response["response"]
 
@@ -97,7 +97,7 @@ def get_mutual(
             "offset": offset + i * 100,
         }
         response = session.get("friends.getMutual", params=params).json()
-        if "error" in response:
+        if "error" in response or response.ok == False:
             raise APIError(response["error"]["error_msg"])
         for arg in response["response"]:
             results.append(
