@@ -40,10 +40,11 @@ def get_friends(
         "fields": ",".join(fields) if fields is not None else "",
         "offset": offset,
     }
-    response = session.get("friends.get", params=params).json()
-    if "error" in response or response.ok == False:
-        raise APIError(response["error"]["error_msg"])
-    return FriendsResponse(**response["response"])
+    response = session.get("friends.get", params=params)
+    answer = response.json()
+    if "error" in answer or not response.ok:
+        raise APIError(answer["error"]["error_msg"])
+    return FriendsResponse(**answer["response"])
 
 
 class MutualFriends(tp.TypedDict):
@@ -80,10 +81,11 @@ def get_mutual(
             "target_uid": target_uid,
             "order": order,
         }
-        response = session.get("friends.getMutual", params=params).json()
-        if "error" in response or response.ok == False:
-            raise APIError(response["error"]["error_msg"])
-        return response["response"]
+        response = session.get("friends.getMutual", params=params)
+        answer = response.json()
+        if "error" in answer or not response.ok:
+            raise APIError(answer["error"]["error_msg"])
+        return answer["response"]
 
     results = []
     progress = lambda x: x
@@ -96,10 +98,11 @@ def get_mutual(
             "count": count if count is not None else "",
             "offset": offset + i * 100,
         }
-        response = session.get("friends.getMutual", params=params).json()
-        if "error" in response or response.ok == False:
-            raise APIError(response["error"]["error_msg"])
-        for arg in response["response"]:
+        response = session.get("friends.getMutual", params=params)
+        answer = response.json()
+        if "error" in answer or not response.ok:
+            raise APIError(answer["error"]["error_msg"])
+        for arg in answer["response"]:
             results.append(
                 MutualFriends(
                     id=arg["id"],

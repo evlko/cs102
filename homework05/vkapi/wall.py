@@ -56,10 +56,10 @@ def get_posts_2500(
         "v": VK_CONFIG["version"],
     }
     response = session.post("execute", data=data)
-    doc = response.json()
-    if "error" in doc or response.ok == False:
-        raise APIError(doc["error"]["error_msg"])
-    return doc["response"]["items"]
+    answer = response.json()
+    if "error" in answer or not response.ok:
+        raise APIError(answer["error"]["error_msg"])
+    return answer["response"]["items"]
 
 
 def get_wall_execute(
