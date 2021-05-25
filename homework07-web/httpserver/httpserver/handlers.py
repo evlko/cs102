@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import socket
+import traceback
 import typing as tp
+from datetime import datetime
 
 from httptools import HttpRequestParser
+from httptools.parser.errors import *
 
 from .request import HTTPRequest
 from .response import HTTPResponse
@@ -15,8 +18,8 @@ Address = tp.Tuple[str, int]
 
 
 class BaseRequestHandler:
-    def __init__(self, socket: socket.socket, address: Address, server: TCPServer) -> None:
-        self.socket = socket
+    def __init__(self, client_socket: socket.socket, address: Address, server: TCPServer) -> None:
+        self.client_socket = client_socket
         self.address = address
         self.server = server
 
@@ -24,17 +27,17 @@ class BaseRequestHandler:
         self.close()
 
     def close(self) -> None:
-        self.socket.close()
+        self.client_socket.close()
 
 
 class EchoRequestHandler(BaseRequestHandler):
     def handle(self) -> None:
         try:
-            data = self.socket.recv(1024)
+            data = self.client_socket.recv(1024)
         except (socket.timeout, BlockingIOError):
             pass
         else:
-            self.socket.sendall(data)
+            self.client_socket.sendall(data)
         finally:
             self.close()
 
@@ -43,7 +46,7 @@ class BaseHTTPRequestHandler(BaseRequestHandler):
     request_klass = HTTPRequest
     response_klass = HTTPResponse
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:  # type:ignore
         super().__init__(*args, **kwargs)
         self.parser = HttpRequestParser(self)
 
@@ -58,7 +61,9 @@ class BaseHTTPRequestHandler(BaseRequestHandler):
             try:
                 response = self.handle_request(request)
             except Exception:
-                # TODO: log exception
+                print(datetime.now())
+                traceback.print_exc()
+                print()
                 response = self.response_klass(status=500, headers={}, body=b"")
         else:
             response = self.response_klass(status=400, headers={}, body=b"")
@@ -66,22 +71,47 @@ class BaseHTTPRequestHandler(BaseRequestHandler):
         self.close()
 
     def parse_request(self) -> tp.Optional[HTTPRequest]:
-        pass
+        while not self._parsed:
+            try:
+                data = self.client_socket.recv(1024)
+            except (
+                socket.timeout,
+                BlockingIOError,
+            ):
+                break
+            if data == b"":
+                break
+            try:
+                self.parser.feed_data(data)
+            except (
+                HttpParserError,  # type: ignore
+                HttpParserInvalidMethodError,  # type: ignore
+                HttpParserInvalidURLError,  # type: ignore
+                HttpParserCallbackError,  # type: ignore
+                HttpParserInvalidStatusError,  # type: ignore
+                HttpParserUpgrade,  # type: ignore
+            ):
+                break
+        if self._parsed:
+            return self.request_klass(
+                self.parser.get_method(), self._url, self._headers, self._body
+            )
+        return None
 
     def handle_request(self, request: HTTPRequest) -> HTTPResponse:
-        pass
+        return self.response_klass(200, {}, b"ok")
 
     def handle_response(self, response: HTTPResponse) -> None:
-        pass
+        self.client_socket.sendall(response.to_http1())
 
     def on_url(self, url: bytes) -> None:
-        pass
+        self._url = url
 
     def on_header(self, name: bytes, value: bytes) -> None:
-        pass
+        self._headers[name] = value
 
     def on_body(self, body: bytes) -> None:
-        pass
+        self._body = body
 
     def on_message_complete(self) -> None:
-        pass
+        self._parsed = True
