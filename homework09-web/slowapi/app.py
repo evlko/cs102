@@ -22,7 +22,7 @@ class SlowAPI:
                 or environ["PATH_INFO"].rsplit("/", 1)[0] == route.path.rsplit("/", 1)[0]
             )
         ][0]
-        
+
         empty_args = []
         args = (
             environ["PATH_INFO"][route.path.find("{") :].split("&")
