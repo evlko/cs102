@@ -73,4 +73,3 @@ class SlowAPI:
 
     def add_middleware(self, middleware) -> None:
         self.middlewares.append(middleware)
-        
