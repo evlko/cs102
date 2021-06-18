@@ -19,8 +19,7 @@ class SlowAPI:
             if route.method == environ["REQUEST_METHOD"]
             and (
                 route.path == environ["PATH_INFO"]
-                or environ["PATH_INFO"].rsplit("/", 1)[0]
-                == route.path.rsplit("/", 1)[0]
+                or environ["PATH_INFO"].rsplit("/", 1)[0] == route.path.rsplit("/", 1)[0]
             )
         ][0]
         
@@ -74,3 +73,4 @@ class SlowAPI:
 
     def add_middleware(self, middleware) -> None:
         self.middlewares.append(middleware)
+        
