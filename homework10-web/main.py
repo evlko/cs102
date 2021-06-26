@@ -99,7 +99,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(username=token_data.username)
+    user = get_user(username=token_data.username)  # type: ignore
     if user is None:
         raise credentials_exception
     return user
@@ -148,9 +148,9 @@ async def create_account(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.post("/notes/", response_model=NoteModelDb)
 async def create_note(
-    title: str = Form("title"),
-    text: str = Form("text"),
-    current_user: UserModel = Depends(get_current_active_user),
+        title: str = Form("title"),
+        text: str = Form("text"),
+        current_user: UserModel = Depends(get_current_active_user),
 ):
     note = Note.create_note(title, text, current_user.id, Session)
     return NoteModelDb(id=note[0], title=note[1], text=note[2])
@@ -165,10 +165,10 @@ async def get_notes(current_user: UserModel = Depends(get_current_active_user)):
 
 @app.put("/notes/{id}", response_model=NoteModelDb)
 async def edit_note(
-    id: int,
-    title: str = Form("title"),
-    text: str = Form("text"),
-    current_user: UserModel = Depends(get_current_active_user),
+        id: int,
+        title: str = Form("title"),
+        text: str = Form("text"),
+        current_user: UserModel = Depends(get_current_active_user),
 ):
     note = Note.edit(id, title, text, current_user.id, Session)
 
